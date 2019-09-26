@@ -1,9 +1,8 @@
-import path from 'path'
 import fs from 'fs'
 import {JSDOM} from 'jsdom'
 import P from 'parsimmon'
 import yaml from 'js-yaml'
-
+import {minify} from 'html-minifier'
 
 interface Preamble {
     module: string
@@ -40,7 +39,7 @@ const generatePageFrom = (source: string, elmcode: string): string => {
         dom.window.eval(script)
         // turn the DOM into string and save it
         const body = dom.window.document.body.innerHTML
-        return body
+        return minify(body, {minifyCSS: true})
     } catch(e) {
         console.error('error:')
         console.error(e.toString())
@@ -81,6 +80,5 @@ const parsePreamble = (p: string): Preamble => {
     }
     return preamble
 }
-
 
 export default generatePageFrom;

@@ -51,11 +51,19 @@ const main = (): void => {
 
 program
     .version(version, '-v, --version')
+
+// "sitelm build"
+program
     .option('-o, --optimize <bool>', 'use optimization')
-    .parse(process.argv)
+    .command('build')
+    .action((_) => {
+        if(program.optimize != null) {
+            config.elm.optimize = (program.optimize as string).toLowerCase() !== 'false'
+        }   
+        main()
+    })
 
-if(program.optimize != null) {
-    config.elm.optimize = (program.optimize as string).toLowerCase() !== 'false'
-}
+program.parse(process.argv)
 
-main()
+
+
