@@ -13,11 +13,14 @@ const config = readConfigFrom('./sitelm.yaml')
  * create a path for saving
  * @param file path of a content file
  */
-const savePathFor = (file: string): {dir: string, name: string} => {
+const savePathFor = (file: string): string => {
     const p = path.parse(file)
     const dir = path.normalize(p.dir).split('/').slice(1).join('/')
-    const saveDir = path.join(config.build.distDir, dir)
-    return {dir: saveDir, name: `${p.name}.html`}
+    if (file === config.build.index) {
+        return path.join(config.build.distDir, dir)
+    } else {
+        return path.join(config.build.distDir, dir, p.name)
+    }
 }
 
 /**
@@ -29,8 +32,8 @@ const convertAndSave = (file: string, elmcode: string): void => {
     console.log(`Building: ${file}`)
     const savePath = savePathFor(file)
     const html = generatePageFrom(file, elmcode)
-    fs.ensureDirSync(savePath.dir)
-    fs.writeFileSync(path.join(savePath.dir, savePath.name), html)
+    fs.ensureDirSync(savePath)
+    fs.writeFileSync(path.join(savePath, 'index.html'), html)
 }
 
 

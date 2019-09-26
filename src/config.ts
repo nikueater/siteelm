@@ -12,6 +12,7 @@ export interface Config {
     }
     build: {
         contents: string[]
+        index?: string
         distDir: string
         staticDir: string
     }
@@ -26,6 +27,7 @@ const minumum: Config = {
     },
     build: {
         contents: ['./contents/**/*.md'],
+        index: './contents/index.md',
         distDir: './dist',
         staticDir: './static'
     },

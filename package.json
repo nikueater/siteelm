@@ -13,7 +13,7 @@
   },
   "keywords": [],
   "author": "nikueater",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "dependencies": {
     "commander": "^3.0.2",
     "fs-extra": "^8.1.0",
