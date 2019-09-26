@@ -1,0 +1,37 @@
+{
+  "name": "sitelm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "private": true,
+  "bin": {
+    "sitelm": "main.js"
+  },
+  "scripts": {
+    "build": "npx tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "nikueater",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^3.0.2",
+    "fs-extra": "^8.1.0",
+    "glob": "^7.1.4",
+    "js-yaml": "^3.13.1",
+    "jsdom": "^15.1.1",
+    "parsimmon": "^1.13.0",
+    "tmp": "^0.1.0"
+  },
+  "devDependencies": {
+    "@types/commander": "^2.12.2",
+    "@types/fs-extra": "^8.0.0",
+    "@types/glob": "^7.1.1",
+    "@types/js-yaml": "^3.12.1",
+    "@types/jsdom": "^12.2.4",
+    "@types/node": "^12.7.5",
+    "@types/parsimmon": "^1.10.0",
+    "@types/tmp": "^0.1.0",
+    "typescript": "^3.6.3"
+  }
+}
