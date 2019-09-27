@@ -1,11 +1,11 @@
 {
-  "name": "sitelm",
+  "name": "siteelm",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
   "private": true,
   "bin": {
-    "sitelm": "main.js"
+    "siteelm": "main.js"
   },
   "scripts": {
     "build": "npx tsc",

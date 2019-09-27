@@ -9,7 +9,7 @@ import readConfigFrom from './config'
 import elmToJsWithConfig from './elmToJs'
 
 const version = '0.1.0'
-const config = readConfigFrom('./sitelm.yaml')
+const config = readConfigFrom('./siteelm.yaml')
 
 /**
  * create a path for saving
@@ -56,7 +56,7 @@ const main = (): void => {
 program
     .version(version, '-v, --version')
 
-// "sitelm make"
+// "siteelm make"
 program
     .option('-o, --optimize', 'use optimization')
     .option('-d, --draft', 'not to ignore drafts')
@@ -71,7 +71,7 @@ program
         main()
     })
 
-// "sitelm server"
+// "siteelm server"
 program
     .option('-o, --optimize', 'use optimization')
     .option('-d, --draft', 'not to ignore drafts')
