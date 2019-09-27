@@ -95,7 +95,6 @@ program
             config.elm.srcDirs || [],
             config.build.staticDir
         ].flat()
-         
         dirs.forEach(x => {
             var initial = true
             watch.watchTree(x, () => {
@@ -106,6 +105,7 @@ program
                 }
             })
         })
+        main()        
         // start a server
         const app = express()
         app.set('port', 3000)

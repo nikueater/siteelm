@@ -41,9 +41,19 @@ const generatePageFrom = (source: string, elmcode: string, withDraft: boolean): 
         const script = `var app = Elm.${p.module}.init({flags:${JSON.stringify(flags)}})`
         dom.window.eval(elmcode)
         dom.window.eval(script)
-        // turn the DOM into string and save it
         const body = dom.window.document.body.innerHTML
-        return minify(body, {minifyCSS: true})
+        // formatting
+        const ds = new JSDOM(body, {runScripts: 'outside-only'})
+        const head = ds.window.document.querySelector('head')
+        ds.window.document.querySelectorAll('style').forEach(x => {
+                const div = x.parentNode
+                if(head && div && div.parentNode) {
+                    head.appendChild(x)
+                    div.parentNode.removeChild(div)
+                }
+            })
+        // turn the DOM into string and save it
+        return minify(ds.serialize(), {minifyCSS: true})
     } catch(e) {
         console.error('error:')
         console.error(e.toString())
