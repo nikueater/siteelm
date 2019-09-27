@@ -6,7 +6,7 @@
     "outDir": "lib",
     "strict": true,
     "allowSyntheticDefaultImports": true,
-    "declaration": true,
+    "declaration": false,
     "esModuleInterop": true,
     "sourceMap": false
   },
