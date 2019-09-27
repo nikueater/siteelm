@@ -92,9 +92,11 @@ program
                 !xs.includes(path.normalize(path.join(x, '..'))))
         const dirs = [
             contentsDirs,
-            config.elm.srcDirs || [],
+            config.elm.staticDir || [],
+            config.elm.dynamicDir || [],
             config.build.staticDir
-        ].flat()
+        ]
+            .flat()
         dirs.forEach(x => {
             var initial = true
             watch.watchTree(x, () => {

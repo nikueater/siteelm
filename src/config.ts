@@ -3,7 +3,8 @@ import yaml from 'js-yaml'
 
 export interface Config {
     elm: {
-        srcDirs?: string[]
+        staticDir?: string
+        dynamicDir?: string
         optimize?: boolean
         command?: string
         exclude: string[]
@@ -52,9 +53,14 @@ const readConfigFrom = (file: string): Config => {
     if(typeof conf.build.draft !== 'boolean') {
         conf.build.draft = false
     }
-    if(!conf.elm.srcDirs) {
+    if(!conf.elm.staticDir || !conf.elm.dynamicDir) {
         const elmJson = JSON.parse(fs.readFileSync('./elm.json', 'utf-8'))
-        conf.elm.srcDirs = elmJson['source-directories']
+        if(!conf.elm.staticDir) {
+            conf.elm.staticDir = elmJson['source-directories']
+        }
+        if(!conf.elm.dynamicDir) {
+            conf.elm.dynamicDir = elmJson['source-directories']
+        }
     }
     return conf
 }

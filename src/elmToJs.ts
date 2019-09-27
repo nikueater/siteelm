@@ -11,10 +11,7 @@ import {Config} from './config'
 const compileElmWithConfig = (config: Config): string => {
     const globOption = {ignore: config.elm.exclude}
     const elmFiles = 
-            (config.elm.srcDirs || [])
-                .map((x: string):string => `${x}/**/*.elm`)
-                .map((x: string):string[] => glob.sync(x, globOption))
-                .flat()
+            glob.sync(`${config.elm.staticDir || ''}/**/*.elm`, globOption)
 
     // considering "elm" and "npx elm"
     const command = (config.elm.command || 'elm').split(' ')
