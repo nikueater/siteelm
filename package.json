@@ -24,6 +24,7 @@
     "jsdom": "^15.1.1",
     "parsimmon": "^1.13.0",
     "tmp": "^0.1.0",
+    "traverse": "^0.6.6",
     "watch": "^1.0.2"
   },
   "devDependencies": {
@@ -37,6 +38,7 @@
     "@types/node": "^12.7.5",
     "@types/parsimmon": "^1.10.0",
     "@types/tmp": "^0.1.0",
+    "@types/traverse": "^0.6.32",
     "@types/watch": "^1.0.1",
     "typescript": "^3.6.3"
   }
