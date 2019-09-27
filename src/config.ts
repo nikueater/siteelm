@@ -2,9 +2,6 @@ import fs from 'fs'
 import yaml from 'js-yaml'
 
 export interface Config {
-    site: {
-        title: string
-    }
     elm: {
         optimize?: boolean
         command?: string
@@ -13,15 +10,13 @@ export interface Config {
     build: {
         contents: string[]
         index?: string
+        draft?: boolean
         distDir: string
         staticDir: string
     }
 }
 
 const minumum: Config = {
-    site: {
-        title: "sitelm"
-    },
     elm: {
         exclude: ['./Util/**/*.elm']
     },
@@ -45,13 +40,16 @@ const readConfigFrom = (file: string): Config => {
         conf.elm.command = 'npx elm'
     }
     if(typeof conf.elm.optimize !== 'boolean') {
-        conf.elm.optimize = true
+        conf.elm.optimize = false
     }
     if(typeof conf.build.distDir !== 'string') {
         conf.build.distDir = './dist'
     }
     if(typeof conf.build.staticDir !== 'string') {
         conf.build.staticDir = './static'
+    }
+    if(typeof conf.build.draft !== 'boolean') {
+        conf.build.draft = false
     }
     return conf
 }

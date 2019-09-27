@@ -1,6 +1,7 @@
 import glob from 'glob'
 import fs from 'fs-extra'
 import path from 'path'
+import express from 'express'
 import program from 'commander'
 import generatePageFrom from './generator'
 import readConfigFrom from './config'
@@ -30,10 +31,12 @@ const savePathFor = (file: string): string => {
  */ 
 const convertAndSave = (file: string, elmcode: string): void => {
     console.log(`Building: ${file}`)
-    const savePath = savePathFor(file)
-    const html = generatePageFrom(file, elmcode)
-    fs.ensureDirSync(savePath)
-    fs.writeFileSync(path.join(savePath, 'index.html'), html)
+    const html = generatePageFrom(file, elmcode, config.build.draft || false)
+    if(html !== '') {
+        const savePath = savePathFor(file)
+        fs.ensureDirSync(savePath)
+        fs.writeFileSync(path.join(savePath, 'index.html'), html)
+    }
 }
 
 
@@ -52,18 +55,40 @@ const main = (): void => {
 program
     .version(version, '-v, --version')
 
-// "sitelm build"
+// "sitelm make"
 program
-    .option('-o, --optimize <bool>', 'use optimization')
-    .command('build')
+    .option('-o, --optimize', 'use optimization')
+    .option('-d, --draft', 'not to ignore drafts')
+    .command('make')
     .action((_) => {
-        if(program.optimize != null) {
-            config.elm.optimize = (program.optimize as string).toLowerCase() !== 'false'
+        if(program.optimize) {
+            config.elm.optimize = program.optimize
         }   
+        if(program.draft) {
+            config.build.draft = program.draft
+        }
         main()
     })
 
-program.parse(process.argv)
+// "sitelm server"
+program
+    .option('-o, --optimize', 'use optimization')
+    .option('-d, --draft', 'not to ignore drafts')
+    .command('server')
+    .action((_) => {
+        if(program.optimize) {
+            config.elm.optimize = program.optimize
+        }   
+        if(program.draft) {
+            config.build.draft = program.draft
+        }
+        main()
+        const app = express()
+        app.set('port', 3000)
+        app.use(express.static(config.build.distDir))
+        app.listen(app.get('port'), () => console.log(`running server localhost:${app.get('port')}`))
+    })
 
+program.parse(process.argv)
 
 

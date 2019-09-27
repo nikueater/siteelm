@@ -21,16 +21,20 @@ class InvalidPreambleError extends ConvertError { name = 'Preamble' }
 /**
  * @param source a file name for creating flags
  * @param elmcode a raw javascript code string
+ * @param withDraft flag for not ignoring drafts
  * @returns void
  */
-const generatePageFrom = (source: string, elmcode: string): string => {
+const generatePageFrom = (source: string, elmcode: string, withDraft: boolean): string => {
     try {
         // create flags
         const document = parseDocument(fs.readFileSync(source, 'utf-8'))
         const p = parsePreamble(document[0])
         const flags = {
             preamble: JSON.stringify(p),
-            content: document[1]
+            body: document[1]
+        }
+        if(p.draft == true && !withDraft) {
+            return ''
         }
         // generate a DOM
         const dom = new JSDOM('', {runScripts: 'outside-only'})
