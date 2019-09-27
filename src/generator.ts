@@ -23,10 +23,11 @@ class InvalidPreambleError extends ConvertError { name = 'Preamble' }
 /**
  * @param source a file name for creating flags
  * @param elmcode a raw javascript code string
+ * @param appjs the path for the dynamic elm code
  * @param withDraft flag for not ignoring drafts
  * @returns void
  */
-const generatePageFrom = (source: string, elmcode: string, withDraft: boolean): string => {
+const generatePageFrom = (source: string, elmcode: string, appjs: string, withDraft: boolean): string => {
     try {
         // create flags
         const document = parseDocument(fs.readFileSync(source, 'utf-8'))
@@ -45,7 +46,7 @@ const generatePageFrom = (source: string, elmcode: string, withDraft: boolean): 
         dom.window.eval(script)
         const body = dom.window.document.body.innerHTML
         // formatting
-        const ds = new JSDOM(body, {runScripts: 'outside-only'})
+        var ds = new JSDOM(body, {runScripts: 'outside-only'})
         const head = ds.window.document.querySelector('head')
         ds.window.document.querySelectorAll('style').forEach(x => {
                 const div = x.parentNode
@@ -54,8 +55,12 @@ const generatePageFrom = (source: string, elmcode: string, withDraft: boolean): 
                     div.parentNode.removeChild(div)
                 }
             })
+        // add dynamic elm elements
+        if(head && appjs !== '') {
+            ds = embedDynamicComponents(ds, appjs)
+        }
         // turn the DOM into string and save it
-        return minify(ds.serialize(), {minifyCSS: true})
+        return minify(ds.serialize(), {minifyCSS: true, minifyJS: true})
     } catch(e) {
         console.error('error:')
         console.error(e.toString())
@@ -114,6 +119,52 @@ const parsePreamble = (p: string, source: string): Preamble => {
         }
     })
     return preamble
+}
+
+/**
+ * @param dom JSDOM
+ * @param appjs path for a js file from elm
+ */
+const embedDynamicComponents = (dom: JSDOM, appjs: string): JSDOM => {
+    const script = dom.window.document.createElement('script')
+    const head = dom.window.document.querySelector('head')
+    if(!head) {
+        return dom
+    }
+    script.src = appjs
+    head.appendChild(script)
+    const initialize = dom.window.document.createElement('script')
+    initialize.textContent = 'window.app = {}'
+    head.appendChild(initialize)
+    var treateds: string[] = []
+    dom.window.document
+        .querySelectorAll('div[data-elm-module]').forEach(x => {
+            const modName = x.getAttribute('data-elm-module') || ''
+            if(treateds.includes(modName)) {
+                return
+            } else {
+                treateds.push(modName)
+            }
+            const objName = modName.replace('.', '')
+            const flagString = x.getAttribute('data-flags') || '{}'
+            var flags = {}
+            try {
+                flags = JSON.parse(flagString)
+            } catch {
+                flags = {}
+            }
+            const s = `
+                var ns = document.querySelectorAll('div[data-elm-module="${modName}"]')
+                for(var i=0;i<ns.length;i++){
+                    window.app.${objName} = Elm.${modName}.init({node:ns[i],flags:${JSON.stringify(flags)}})
+                }
+
+            `
+            const script = dom.window.document.createElement('script')
+            script.textContent = s
+            dom.window.document.body.appendChild(script)
+        })
+    return dom
 }
 
 export default generatePageFrom;

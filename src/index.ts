@@ -6,7 +6,7 @@ import watch from 'watch'
 import program from 'commander'
 import generatePageFrom from './generator'
 import readConfigFrom from './config'
-import elmToJsWithConfig from './elmToJs'
+import {compileStaticElmWith, compileDynamicElmWith} from './elmToJs'
 
 const version = '0.1.0'
 const config = readConfigFrom('./siteelm.yaml')
@@ -29,10 +29,11 @@ const savePathFor = (file: string): string => {
  * convert a content file to a static html and save it 
  * @param file path of a content file
  * @param elmcode a raw javascript code string
+ * @param appjs path for the dynamic elm code
  */ 
-const convertAndSave = (file: string, elmcode: string): void => {
+const convertAndSave = (file: string, elmcode: string, appjs: string): void => {
     console.log(`Building: ${file}`)
-    const html = generatePageFrom(file, elmcode, config.build.draft || false)
+    const html = generatePageFrom(file, elmcode, appjs, config.build.draft || false)
     if(html !== '') {
         const savePath = savePathFor(file)
         fs.ensureDirSync(savePath)
@@ -43,12 +44,13 @@ const convertAndSave = (file: string, elmcode: string): void => {
 
 const main = (): void => {
     // 1. generate static pages
-    const elm = elmToJsWithConfig(config)
+    const elm = compileStaticElmWith(config)
+    const appjs = compileDynamicElmWith(config)
     const contentFiles = 
         config.build.contents
             .map(x => glob.sync(x))
             .flat()
-    contentFiles.forEach(x => convertAndSave(x, elm))
+    contentFiles.forEach(x => convertAndSave(x, elm, appjs))
     // 2. copy static assets
     fs.copySync(config.build.staticDir, config.build.distDir)
 }
