@@ -23,7 +23,8 @@
     "js-yaml": "^3.13.1",
     "jsdom": "^15.1.1",
     "parsimmon": "^1.13.0",
-    "tmp": "^0.1.0"
+    "tmp": "^0.1.0",
+    "watch": "^1.0.2"
   },
   "devDependencies": {
     "@types/commander": "^2.12.2",
@@ -36,6 +37,7 @@
     "@types/node": "^12.7.5",
     "@types/parsimmon": "^1.10.0",
     "@types/tmp": "^0.1.0",
+    "@types/watch": "^1.0.1",
     "typescript": "^3.6.3"
   }
 }

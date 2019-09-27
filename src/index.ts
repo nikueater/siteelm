@@ -2,6 +2,7 @@ import glob from 'glob'
 import fs from 'fs-extra'
 import path from 'path'
 import express from 'express'
+import watch from 'watch'
 import program from 'commander'
 import generatePageFrom from './generator'
 import readConfigFrom from './config'
@@ -82,7 +83,30 @@ program
         if(program.draft) {
             config.build.draft = program.draft
         }
-        main()
+        // watch directories
+        const contentsDirs = 
+            config.build.contents
+            .flatMap(x => glob.sync(x))
+            .map(x => path.normalize(path.dirname(x)))
+            .filter((x, _, xs) => 
+                !xs.includes(path.normalize(path.join(x, '..'))))
+        const dirs = [
+            contentsDirs,
+            config.elm.srcDirs || [],
+            config.build.staticDir
+        ].flat()
+         
+        dirs.forEach(x => {
+            var initial = true
+            watch.watchTree(x, () => {
+                if(!initial) {
+                    main()
+                } else {
+                    initial = false
+                }
+            })
+        })
+        // start a server
         const app = express()
         app.set('port', 3000)
         app.use(express.static(config.build.distDir))

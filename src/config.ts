@@ -3,6 +3,7 @@ import yaml from 'js-yaml'
 
 export interface Config {
     elm: {
+        srcDirs?: string[]
         optimize?: boolean
         command?: string
         exclude: string[]
@@ -50,6 +51,10 @@ const readConfigFrom = (file: string): Config => {
     }
     if(typeof conf.build.draft !== 'boolean') {
         conf.build.draft = false
+    }
+    if(!conf.elm.srcDirs) {
+        const elmJson = JSON.parse(fs.readFileSync('./elm.json', 'utf-8'))
+        conf.elm.srcDirs = elmJson['source-directories']
     }
     return conf
 }

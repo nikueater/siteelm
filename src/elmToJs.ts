@@ -10,12 +10,12 @@ import {Config} from './config'
  */
 const compileElmWithConfig = (config: Config): string => {
     const globOption = {ignore: config.elm.exclude}
-    const elmJson = JSON.parse(fs.readFileSync('./elm.json', 'utf-8'))
     const elmFiles = 
-            elmJson['source-directories']
+            (config.elm.srcDirs || [])
                 .map((x: string):string => `${x}/**/*.elm`)
                 .map((x: string):string[] => glob.sync(x, globOption))
                 .flat()
+
     // considering "elm" and "npx elm"
     const command = (config.elm.command || 'elm').split(' ')
     const tmpFile = `${tmp.fileSync().name}.js`
