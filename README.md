@@ -1,4 +1,4 @@
-<img src='https://raw.githubusercontent.com/nikueater/siteelm/master/res/img/siteelm.svg' width='420' alt='siteelm'>
+<img src='res/img/siteelm.svg' width='420' alt='siteelm'>
 
 0.1.0: α version
 
