@@ -4,9 +4,9 @@ import path from 'path'
 import express from 'express'
 import watch from 'watch'
 import program from 'commander'
-import generatePageFrom from './generator'
+import jsToHtmlWith from './jstohtml'
 import readConfigFrom from './config'
-import {compileStaticElmWith, compileDynamicElmWith} from './elmToJs'
+import {compileStaticElmWith, compileDynamicElmWith} from './elmtojs'
 
 const version = '0.1.0'
 const config = readConfigFrom('./siteelm.yaml')
@@ -16,12 +16,12 @@ const config = readConfigFrom('./siteelm.yaml')
  * @param file path of a content file
  */
 const savePathFor = (file: string): string => {
-    const p = path.parse(file)
-    const dir = path.normalize(p.dir).split('/').slice(1).join('/')
-    if (file === config.build.index) {
-        return path.join(config.build.distDir, dir)
+    if (file === config.build.contents.index) {
+        return path.join(config.build.dist_dir, 'index.html')
     } else {
-        return path.join(config.build.distDir, dir, p.name)
+        const r = path.relative(config.build.contents.src_dir, file) 
+        const p = path.parse(r)
+        return path.join(config.build.dist_dir, p.dir, p.name, 'index.html')
     }
 }
 
@@ -33,11 +33,11 @@ const savePathFor = (file: string): string => {
  */ 
 const convertAndSave = (file: string, elmcode: string, appjs: string): void => {
     console.log(`Building: ${file}`)
-    const html = generatePageFrom(file, elmcode, appjs, config.build.draft || false)
+    const html = jsToHtmlWith(file, elmcode, appjs, config.build.contents.draft || false)
     if(html !== '') {
         const savePath = savePathFor(file)
-        fs.ensureDirSync(savePath)
-        fs.writeFileSync(path.join(savePath, 'index.html'), html)
+        fs.ensureFileSync(savePath)
+        fs.writeFileSync(savePath, html)
     }
 }
 
@@ -47,12 +47,10 @@ const main = (): void => {
     const elm = compileStaticElmWith(config)
     const appjs = compileDynamicElmWith(config)
     const contentFiles = 
-        config.build.contents
-            .map(x => glob.sync(x))
-            .flat()
+        glob.sync(`${config.build.contents.src_dir}/**/*`, {ignore: config.build.contents.exclude || [], nodir: true})
     contentFiles.forEach(x => convertAndSave(x, elm, appjs))
     // 2. copy static assets
-    fs.copySync(config.build.staticDir, config.build.distDir)
+    fs.copySync(config.build.assets.src_dir, config.build.dist_dir)
 }
 
 program
@@ -65,10 +63,10 @@ program
     .command('make')
     .action((_) => {
         if(program.optimize) {
-            config.elm.optimize = program.optimize
+            config.build.elm.optimize = program.optimize
         }   
         if(program.draft) {
-            config.build.draft = program.draft
+            config.build.contents.draft = program.draft
         }
         main()
     })
@@ -80,23 +78,22 @@ program
     .command('server')
     .action((_) => {
         if(program.optimize) {
-            config.elm.optimize = program.optimize
+            config.build.elm.optimize = program.optimize
         }   
         if(program.draft) {
-            config.build.draft = program.draft
+            config.build.contents.draft = program.draft
         }
         // watch directories
         const contentsDirs = 
-            config.build.contents
-            .flatMap(x => glob.sync(x))
+            glob.sync(`${config.build.contents.src_dir}/**/*`, {ignore: config.build.contents.exclude || []})
             .map(x => path.normalize(path.dirname(x)))
             .filter((x, _, xs) => 
                 !xs.includes(path.normalize(path.join(x, '..'))))
         const dirs = [
             contentsDirs,
-            config.elm.staticDir || [],
-            config.elm.dynamicDir || [],
-            config.build.staticDir
+            config.build.static_elm.src_dir || '',
+            config.build.dynamic_elm.src_dir || '',
+            config.build.assets.src_dir
         ]
             .flat()
         dirs.forEach(x => {
@@ -113,10 +110,9 @@ program
         // start a server
         const app = express()
         app.set('port', 3000)
-        app.use(express.static(config.build.distDir))
+        app.use(express.static(config.build.dist_dir))
         app.listen(app.get('port'), () => console.log(`running server localhost:${app.get('port')}`))
     })
 
 program.parse(process.argv)
-
 

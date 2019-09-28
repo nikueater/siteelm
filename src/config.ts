@@ -2,64 +2,67 @@ import fs from 'fs'
 import yaml from 'js-yaml'
 
 export interface Config {
-    elm: {
-        staticDir?: string
-        dynamicDir?: string
-        optimize?: boolean
-        command?: string
-        exclude: string[]
-    }
     build: {
-        contents: string[]
-        index?: string
-        draft?: boolean
-        distDir: string
-        staticDir: string
+        dist_dir: string
+        contents: {
+            src_dir: string
+            index: string
+            exclude?: string[]
+            draft?: boolean
+        }
+        assets: {
+            src_dir: string
+        }
+        elm: {
+            command?: string
+            optimize?: boolean
+        }
+        static_elm: {
+            src_dir: string
+            exclude?: string[]
+        }
+        dynamic_elm: {
+            src_dir: string
+            exclude?: string[]
+        }
     }
 }
 
-const minumum: Config = {
-    elm: {
-        exclude: ['./Util/**/*.elm']
-    },
-    build: {
-        contents: ['./contents/**/*.md'],
-        index: './contents/index.md',
-        distDir: './dist',
-        staticDir: './static'
-    },
-}
 
 /**
  * @param file config file
+ * @param option additional options
  * @returns object
  */
-const readConfigFrom = (file: string): Config => {
+const readConfigFrom = (file: string, option?: {optimize: boolean, withDraft: boolean}): Config => {
     const yml = fs.readFileSync(file, 'utf-8')
     var conf = yaml.safeLoad(yml)
-
-    if(fs.existsSync('./package.json') && !conf.elm.command) {
-        conf.elm.command = 'npx elm'
+    const opt = option || {optimize: false, withDraft: false}
+    if(!conf.build.elm) {
+        conf.build.elm = {}
     }
-    if(typeof conf.elm.optimize !== 'boolean') {
-        conf.elm.optimize = false
+    if(fs.existsSync('./package.json') && !conf.build.elm.command) {
+        conf.build.elm.command = 'npx elm'
+    }
+    if(typeof conf.build.elm.optimize !== 'boolean') {
+        conf.build.elm.optimize = opt.optimize
     }
     if(typeof conf.build.distDir !== 'string') {
-        conf.build.distDir = './dist'
+        conf.build.dist_dir = './dist'
     }
-    if(typeof conf.build.staticDir !== 'string') {
-        conf.build.staticDir = './static'
+    if(typeof conf.build.assets.src_dir !== 'string') {
+        conf.build.assets.src_dir = './assets'
     }
-    if(typeof conf.build.draft !== 'boolean') {
-        conf.build.draft = false
+    if(typeof conf.build.contents.draft !== 'boolean') {
+        conf.build.contents.draft = opt.withDraft
     }
-    if(!conf.elm.staticDir || !conf.elm.dynamicDir) {
-        const elmJson = JSON.parse(fs.readFileSync('./elm.json', 'utf-8'))
-        if(!conf.elm.staticDir) {
-            conf.elm.staticDir = elmJson['source-directories']
+    if(!conf.build.static_elm.src_dir || !conf.build.dynamic_elm.src_dir) {
+        const elm_json = JSON.parse(fs.readFileSync('./elm.json', 'utf-8'))
+        if(!conf.build.static_elm.src_dir) {
+            conf.build.static_elm.src_dir = elm_json['source-directories']
         }
-        if(!conf.elm.dynamicDir) {
-            conf.elm.dynamicDir = elmJson['source-directories']
+        if(!conf.build.dynamic_elm.src_dir) {
+            conf.build.dynamic_elm.src_dir = elm_json['source-directories']
         }
     }
     return conf

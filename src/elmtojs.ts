@@ -11,8 +11,9 @@ import {Config} from './config'
  */
 export const compileStaticElmWith = (config: Config): string => {
     const tmpFile = `${tmp.fileSync().name}.js`
-    const srcDir = config.elm.staticDir || ''
-    const r = compileElmWith(config, srcDir, tmpFile)
+    const srcDir = config.build.static_elm.src_dir || ''
+    const exclude = config.build.static_elm.exclude || []
+    const r = compileElmWith(config, srcDir, exclude, tmpFile)
     return r ? fs.readFileSync(tmpFile, 'utf-8') : ''
 }
 
@@ -22,30 +23,32 @@ export const compileStaticElmWith = (config: Config): string => {
  */
 export const compileDynamicElmWith = (config: Config): string => {
     const fName = 'app.js'
-    const outFile = path.join(config.build.distDir, fName)
-    const srcDir = config.elm.dynamicDir || ''
-    const r = compileElmWith(config, srcDir, outFile)
-    return r ? `/${path.relative(config.build.distDir, outFile)}` : ''
+    const outFile = path.join(config.build.dist_dir, fName)
+    const srcDir = config.build.dynamic_elm.src_dir || ''
+    const exclude = config.build.dynamic_elm.exclude || []
+    const r = compileElmWith(config, srcDir, exclude, outFile)
+    return r ? `/${path.relative(config.build.dist_dir, outFile)}` : ''
 }
 
 /**
  * @param config Config
  * @param srcDir source directory
+ * @param exclude glob patterns to ignore
  * @param output a file name to output
  * @returns succeeded or not
  */
-const compileElmWith = (config: Config, srcDir: string, output: string): boolean => {
-    const globOption = {ignore: config.elm.exclude}
+const compileElmWith = (config: Config, srcDir: string, exclude: string[], output: string): boolean => {
+    const globOption = {ignore: exclude}
     const elmFiles = 
             glob.sync(`${srcDir}/**/*.elm`, globOption)
 
     // considering "elm" and "npx elm"
-    const command = (config.elm.command || 'elm').split(' ')
+    const command = (config.build.elm.command || 'elm').split(' ')
     const args = [ 
         command.slice(1),
         "make", 
         elmFiles,
-        config.elm.optimize ? "--optimize" : "",
+        config.build.elm.optimize ? "--optimize" : "",
         `--output=${output}`
         ]
         .flat()

@@ -27,11 +27,11 @@ class InvalidPreambleError extends ConvertError { name = 'Preamble' }
  * @param withDraft flag for not ignoring drafts
  * @returns void
  */
-const generatePageFrom = (source: string, elmcode: string, appjs: string, withDraft: boolean): string => {
+const jsToHtmlWith = (sourcePath: string, elmcode: string, appjsPath: string, withDraft: boolean): string => {
     try {
         // create flags
-        const document = parseDocument(fs.readFileSync(source, 'utf-8'))
-        const p = parsePreamble(document[0], source)
+        const document = parseDocument(fs.readFileSync(sourcePath, 'utf-8'))
+        const p = parsePreamble(document[0], sourcePath)
         const flags = {
             preamble: JSON.stringify(p),
             body: document[1]
@@ -48,16 +48,18 @@ const generatePageFrom = (source: string, elmcode: string, appjs: string, withDr
         // formatting
         var ds = new JSDOM(body, {runScripts: 'outside-only'})
         const head = ds.window.document.querySelector('head')
-        ds.window.document.querySelectorAll('style').forEach(x => {
-                const div = x.parentNode
-                if(head && div && div.parentNode) {
-                    head.appendChild(x)
-                    div.parentNode.removeChild(div)
-                }
-            })
-        // add dynamic elm elements
-        if(head && appjs !== '') {
-            ds = embedDynamicComponents(ds, appjs)
+        if(head) {
+            ds.window.document.querySelectorAll('style').forEach(x => {
+                    const div = x.parentNode
+                    if(div && div.parentNode) {
+                        head.appendChild(x)
+                        div.parentNode.removeChild(div)
+                    }
+                })
+            // add dynamic elm elements
+            if(appjsPath !== '') {
+                ds = embedDynamicComponents(ds, appjsPath)
+            }
         }
         // turn the DOM into string and save it
         return minify(ds.serialize(), {minifyCSS: true, minifyJS: true})
@@ -158,7 +160,6 @@ const embedDynamicComponents = (dom: JSDOM, appjs: string): JSDOM => {
                 for(var i=0;i<ns.length;i++){
                     window.app.${objName} = Elm.${modName}.init({node:ns[i],flags:${JSON.stringify(flags)}})
                 }
-
             `
             const script = dom.window.document.createElement('script')
             script.textContent = s
@@ -167,4 +168,4 @@ const embedDynamicComponents = (dom: JSDOM, appjs: string): JSDOM => {
     return dom
 }
 
-export default generatePageFrom;
+export default jsToHtmlWith
