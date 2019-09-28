@@ -1,10 +1,15 @@
 {
   "name": "siteelm",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "a simple static site generator for Elm",
   "bin": {
     "siteelm": "main.js"
   },
+  "repository" :
+  { "type" : "git"
+  , "url" : "git+https://github.com/nikueater/siteelm.git"
+  },
+  "homepate": "https://github.com/nikueater/siteelm", 
   "scripts": {
     "build": "npx tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
