@@ -29,6 +29,10 @@ h2 {
     border-radius: 1.5rem;
 }
 
+img {
+    display: block;
+}
+
 li {
     margin-bottom: 0.5rem;
 }
@@ -57,9 +61,12 @@ a.prev:before {
 	margin-top: -12px;
 }
 .header {
-    /*background-color: #58637A;*/
     text-align: center;
     margin: 2rem 0;
+}
+
+.header img {
+    margin: 0 auto;
 }
 
 .inner {

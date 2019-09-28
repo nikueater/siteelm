@@ -1,7 +1,7 @@
 module Static.Basic exposing (main)
 
-import Html exposing (Html, div, h2, li, text, ul)
-import Html.Attributes exposing (class, href)
+import Html exposing (Html, div, h2, img, li, text, ul)
+import Html.Attributes exposing (alt, class, href, src)
 import Json.Decode as D exposing (Decoder)
 import Markdown
 import Siteelm.Html as Html
@@ -67,6 +67,8 @@ viewHead preamble _ =
 viewBody : Preamble -> String -> List (Html Never)
 viewBody preamble body =
     [ View.header
+    , img [ src "/images/header.svg", alt "" ]
+        []
     , div []
         [ h2 [] [ text "body text" ]
         , div [ class "inner" ]
