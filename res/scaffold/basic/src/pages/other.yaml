@@ -1,6 +1,6 @@
-- name: Orange
-  price: 60
-- name: Strawberry
-  price: 50
-- name: Persimmon
-  price: 80
+- name: Unagi
+  price: 2000
+- name: Hamo
+  price: 1000
+- name: Hamachi
+  price: 500

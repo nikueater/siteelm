@@ -33,7 +33,7 @@ preambleDecoder =
 viewHead : Preamble -> String -> List (Html Never)
 viewHead preamble _ =
     [ Html.meta [ charset "utf-8" ]
-    , Html.title [] (preamble.title ++ "| sample site")
+    , Html.title [] (preamble.title ++ " | sample site")
     , Html.link [ rel "stylesheet", href "/style.css" ]
     , Html.link [ rel "stylesheet", href "https://fonts.googleapis.com/css?family=Questrial&display=swap" ]
     ]
