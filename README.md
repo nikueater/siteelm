@@ -2,6 +2,8 @@
 
 0.1.0: α version
 
+demo: https://siteelm.netlify.com/ ([source](/res/scaffold/basic))
+
 ## about
 It's just another static site generator for Elm, but has some features.
 
