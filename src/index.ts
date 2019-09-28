@@ -2,6 +2,7 @@ import program from 'commander'
 import readConfigFrom from './config'
 import server from './server'
 import generateAll from './generator'
+import initialize from './initializer'
 
 const version = '0.1.0'
 
@@ -34,6 +35,13 @@ program
         }
         const config = readConfigFrom('./siteelm.yaml', option)
         server(config)
+    })
+
+// "siteelm init"
+program
+    .command('init')
+    .action(() => {
+        initialize()
     })
 
 program.parse(process.argv)

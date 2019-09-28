@@ -56,7 +56,6 @@ const compileElmWith = (config: Config, srcDir: string, exclude: string[], outpu
         ]
         .flat()
         .filter((x: string) => x.length > 0)
-    console.log(command[0], ' ', args.join(' '))
     const r = spawnSync(command[0], args, {stdio: 'inherit'})
     return r.status === 0 
 }
