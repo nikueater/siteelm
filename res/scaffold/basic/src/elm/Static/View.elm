@@ -13,6 +13,6 @@ header =
                 ]
             ]
         , a [ href "/" ]
-            [ img [ class "logo", src "/images/logo.svg", width 280, height 140, alt "siteelm" ] []
+            [ img [ class "logo", src "/images/logo.svg", width 320, height 160, alt "siteelm" ] []
             ]
         ]

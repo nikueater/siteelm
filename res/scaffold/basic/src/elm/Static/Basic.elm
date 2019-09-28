@@ -92,10 +92,7 @@ viewBody preamble body =
             , div [ class "inner" ]
                 [ text "you can write YAML in the preamble section"
                 , viewProducts preamble.products
-                ]
-            , div
-                [ class "inner" ]
-                [ text "external YAML files can be imported"
+                , text "external YAML files can be imported"
                 , viewProducts preamble.recommends
                 ]
             ]
