@@ -10,13 +10,18 @@ html{
 }
 
 body {
-    max-width: 720px;
-    margin: auto;
     font-family: Questrial, sans-serif;
     font-size: 20px;
     color: #242424;
+    margin: 0;
+    padding: 0;
     text-decoration-skip-ink: none;
-    padding-bottom: 128px;
+}
+
+.main {
+    max-width: 720px;
+    margin: auto;
+    padding-bottom: 96px;
 }
 
 h2 {
@@ -62,11 +67,19 @@ a.prev:before {
 }
 .header {
     text-align: center;
-    margin: 2rem 0;
 }
 
-.header img {
+.header img.logo {
     margin: 0 auto;
+}
+
+.stripe {
+    width: 100%;
+    background-color: #58637a;
+    height: 48px;
+    margin-bottom: 32px;
+    text-align: left;
+    padding: 0 1rem;
 }
 
 .inner {

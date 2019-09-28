@@ -67,35 +67,37 @@ viewHead preamble _ =
 viewBody : Preamble -> String -> List (Html Never)
 viewBody preamble body =
     [ View.header
-    , img [ src "/images/header.svg", alt "" ]
-        []
-    , div []
-        [ h2 [] [ text "body text" ]
-        , div [ class "inner" ]
-            [ text "since the body text is just a string, give it to a markdown parser"
-            , Markdown.toHtml [] body
+    , div
+        [ class "main" ]
+        [ img [ src "/images/header.svg", alt "" ] []
+        , div []
+            [ h2 [] [ text "body text" ]
+            , div [ class "inner" ]
+                [ text "since the body text is just a string, give it to a markdown parser"
+                , Markdown.toHtml [] body
+                ]
             ]
-        ]
-    , div []
-        [ h2 [] [ text "dynamic components" ]
-        , div [ class "inner" ]
-            [ text "with Browser.element, dynamic contents can be embedded"
-            , Html.dynamic
-                { moduleName = "Dynamic.Counter"
-                , flags = "{value: 100}"
-                }
+        , div []
+            [ h2 [] [ text "dynamic components" ]
+            , div [ class "inner" ]
+                [ text "with Browser.element, dynamic contents can be embedded"
+                , Html.dynamic
+                    { moduleName = "Dynamic.Counter"
+                    , flags = "{value: 100}"
+                    }
+                ]
             ]
-        ]
-    , div []
-        [ h2 [] [ text "preamble" ]
-        , div [ class "inner" ]
-            [ text "you can write YAML in the preamble section"
-            , viewProducts preamble.products
-            ]
-        , div
-            [ class "inner" ]
-            [ text "external YAML files can be imported"
-            , viewProducts preamble.recommends
+        , div []
+            [ h2 [] [ text "preamble" ]
+            , div [ class "inner" ]
+                [ text "you can write YAML in the preamble section"
+                , viewProducts preamble.products
+                ]
+            , div
+                [ class "inner" ]
+                [ text "external YAML files can be imported"
+                , viewProducts preamble.recommends
+                ]
             ]
         ]
     ]
