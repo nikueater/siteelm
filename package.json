@@ -1,8 +1,7 @@
 {
   "name": "siteelm",
-  "version": "1.0.0",
-  "description": "",
-  "main": "main.js",
+  "version": "0.1.0",
+  "description": "a simple static site generator for Elm",
   "private": true,
   "bin": {
     "siteelm": "main.js"
@@ -15,7 +14,6 @@
   "author": "nikueater",
   "license": "Apache-2.0",
   "dependencies": {
-    "browser-sync": "^2.26.7",
     "commander": "^3.0.2",
     "express": "^4.17.1",
     "express-ws": "^4.0.0",

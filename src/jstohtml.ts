@@ -68,8 +68,9 @@ const jsToHtmlWith = (sourcePath: string, elmcode: string, appjsPath: string, wi
             s.textContent = autoReloaderCode()
             ds.window.document.body.appendChild(s)
         }
+        const html = `<!doctype html>\n${ds.serialize()}`
         // turn the DOM into string and save it
-        return minify(ds.serialize(), {minifyCSS: true, minifyJS: true})
+        return minify(html, {minifyCSS: true, minifyJS: true})
     } catch(e) {
         console.error('error:')
         console.error(e.toString())
@@ -154,11 +155,7 @@ const embedDynamicComponents = (dom: JSDOM, appjs: string): JSDOM => {
             } else {
                 treateds.push(modName)
             }
-            const flagString = x.getAttribute('data-flags') || '{}'
-            var flags = {}
-            try {
-                flags = JSON.parse(flagString)
-            } catch {}
+            const flags = x.getAttribute('data-flags') || '{}'
             const script = dom.window.document.createElement('script')
             script.textContent = dynamicElmInitCode(modName, flags)
             dom.window.document.body.appendChild(script)

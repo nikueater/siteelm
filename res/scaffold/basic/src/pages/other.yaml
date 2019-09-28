@@ -1,0 +1,6 @@
+- name: Orange
+  price: 60
+- name: Strawberry
+  price: 50
+- name: Persimmon
+  price: 80

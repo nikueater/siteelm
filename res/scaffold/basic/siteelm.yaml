@@ -1,0 +1,16 @@
+build:
+    dist_dir: ./dist
+    contents: 
+        src_dir: ./src/pages
+        index: ./src/pages/index.md
+        exclude:
+            - ./**/*.yaml
+    assets:
+        src_dir: ./src/assets
+    static_elm:  
+        src_dir: ./src/elm/Static
+        exclude:
+            - ./**/View.txt
+    dynamic_elm:
+        src_dir: ./src/elm/Dynamic
+

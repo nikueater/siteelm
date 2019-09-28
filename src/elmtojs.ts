@@ -41,6 +41,9 @@ const compileElmWith = (config: Config, srcDir: string, exclude: string[], outpu
     const globOption = {ignore: exclude}
     const elmFiles = 
             glob.sync(`${srcDir}/**/*.elm`, globOption)
+    if(elmFiles.length === 0) {
+        return true
+    }
 
     // considering "elm" and "npx elm"
     const command = (config.build.elm.command || 'elm').split(' ')
@@ -53,6 +56,7 @@ const compileElmWith = (config: Config, srcDir: string, exclude: string[], outpu
         ]
         .flat()
         .filter((x: string) => x.length > 0)
+    console.log(command[0], ' ', args.join(' '))
     const r = spawnSync(command[0], args, {stdio: 'inherit'})
     return r.status === 0 
 }
