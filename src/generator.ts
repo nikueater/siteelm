@@ -1,9 +1,9 @@
 import fs from 'fs-extra'
 import path from 'path'
 import glob from 'glob'
-import jsToHtmlWith from './jstohtml'
+import jsToHtmlWith from './generator/jstohtml'
 import {Config} from './config'
-import {compileStaticElmWith, compileDynamicElmWith} from './elmtojs'
+import {compileStaticElmWith, compileDynamicElmWith} from './generator/elmtojs'
 
 /**
  * main function for generating the site

@@ -3,7 +3,7 @@ import fs from 'fs'
 import tmp from 'tmp'
 import {spawnSync} from 'child_process'
 import path from 'path'
-import {Config} from './config'
+import {Config} from '../config'
 
 /**
  * @param config Config
