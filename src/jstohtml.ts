@@ -5,6 +5,7 @@ import yaml from 'js-yaml'
 import path from 'path'
 import {minify} from 'html-minifier'
 import traverse from 'traverse'
+import {staticElmInitCode, dynamicElmInitCode, autoReloaderCode} from './snippet'
 
 interface Preamble {
     module: string
@@ -25,9 +26,10 @@ class InvalidPreambleError extends ConvertError { name = 'Preamble' }
  * @param elmcode a raw javascript code string
  * @param appjs the path for the dynamic elm code
  * @param withDraft flag for not ignoring drafts
+ * @param autoReloader 
  * @returns void
  */
-const jsToHtmlWith = (sourcePath: string, elmcode: string, appjsPath: string, withDraft: boolean): string => {
+const jsToHtmlWith = (sourcePath: string, elmcode: string, appjsPath: string, withDraft: boolean, autoReloader: boolean): string => {
     try {
         // create flags
         const document = parseDocument(fs.readFileSync(sourcePath, 'utf-8'))
@@ -41,9 +43,8 @@ const jsToHtmlWith = (sourcePath: string, elmcode: string, appjsPath: string, wi
         }
         // generate a DOM
         const dom = new JSDOM('', {runScripts: 'outside-only'})
-        const script = `var app = Elm.${p.module}.init({flags:${JSON.stringify(flags)}})`
         dom.window.eval(elmcode)
-        dom.window.eval(script)
+        dom.window.eval(staticElmInitCode(p.module, flags))
         const body = dom.window.document.body.innerHTML
         // formatting
         var ds = new JSDOM(body, {runScripts: 'outside-only'})
@@ -60,6 +61,12 @@ const jsToHtmlWith = (sourcePath: string, elmcode: string, appjsPath: string, wi
             if(appjsPath !== '') {
                 ds = embedDynamicComponents(ds, appjsPath)
             }
+        }
+        // auto reloader
+        if (autoReloader) {
+            const s = ds.window.document.createElement('script')
+            s.textContent = autoReloaderCode()
+            ds.window.document.body.appendChild(s)
         }
         // turn the DOM into string and save it
         return minify(ds.serialize(), {minifyCSS: true, minifyJS: true})
@@ -147,22 +154,13 @@ const embedDynamicComponents = (dom: JSDOM, appjs: string): JSDOM => {
             } else {
                 treateds.push(modName)
             }
-            const objName = modName.replace('.', '')
             const flagString = x.getAttribute('data-flags') || '{}'
             var flags = {}
             try {
                 flags = JSON.parse(flagString)
-            } catch {
-                flags = {}
-            }
-            const s = `
-                var ns = document.querySelectorAll('div[data-elm-module="${modName}"]')
-                for(var i=0;i<ns.length;i++){
-                    window.app.${objName} = Elm.${modName}.init({node:ns[i],flags:${JSON.stringify(flags)}})
-                }
-            `
+            } catch {}
             const script = dom.window.document.createElement('script')
-            script.textContent = s
+            script.textContent = dynamicElmInitCode(modName, flags)
             dom.window.document.body.appendChild(script)
         })
     return dom

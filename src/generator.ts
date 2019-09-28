@@ -8,14 +8,16 @@ import {compileStaticElmWith, compileDynamicElmWith} from './elmtojs'
 /**
  * main function for generating the site
  * @param config
+ * @param isServer
  */ 
-const generateAll = (config: Config) => {
+const generateAll = (config: Config, option?: {isServer?: boolean}) => {
     // 1. generate static pages
     const elm = compileStaticElmWith(config)
     const appjs = compileDynamicElmWith(config)
     const contentFiles = 
         glob.sync(`${config.build.contents.src_dir}/**/*`, {ignore: config.build.contents.exclude || [], nodir: true})
-    contentFiles.forEach(x => convertAndSave(x, config, elm, appjs))
+    const autoReload = (option || {}).isServer || false
+    contentFiles.forEach(x => convertAndSave(x, config, elm, appjs, autoReload))
     // 2. copy static assets
     fs.copySync(config.build.assets.src_dir, config.build.dist_dir)
 }
@@ -41,10 +43,12 @@ const savePathFor = (file: string, config: Config): string => {
  * @param config
  * @param elmcode a raw javascript code string
  * @param appjs path for the dynamic elm code
+ * @param autoReloader enable auto reloading
  */ 
-const convertAndSave = (file: string, config: Config, elmcode: string, appjs: string): void => {
+const convertAndSave = (file: string, config: Config, elmcode: string, appjs: string, autoReloader: boolean): void => {
     console.log(`Building: ${file}`)
-    const html = jsToHtmlWith(file, elmcode, appjs, config.build.contents.draft || false)
+    const draft = config.build.contents.draft || false
+    const html = jsToHtmlWith(file, elmcode, appjs, draft, autoReloader)
     if(html !== '') {
         const savePath = savePathFor(file, config)
         fs.ensureFileSync(savePath)

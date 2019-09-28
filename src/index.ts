@@ -13,7 +13,7 @@ program
     .option('-o, --optimize', 'use optimization')
     .option('-d, --draft', 'not to ignore drafts')
     .command('make')
-    .action((_) => {
+    .action(() => {
         const option = {
             optimize: program.optimize,
             withDraft: program.draft
@@ -27,7 +27,7 @@ program
     .option('-o, --optimize', 'use optimization')
     .option('-d, --draft', 'not to ignore drafts')
     .command('server')
-    .action((_) => {
+    .action(() => {
         const option = {
             optimize: program.optimize,
             withDraft: program.draft
