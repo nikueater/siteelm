@@ -1,6 +1,7 @@
 <img src='res/img/siteelm.svg' width='420' alt='siteelm'>
 
-0.1.0: α version
+VERSION: α(0.1.0)  
+NODE_VERSION: v12.2.0
 
 demo: https://siteelm.netlify.com/ ([source](/res/scaffold/basic))
 
