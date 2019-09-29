@@ -1,6 +1,7 @@
-module Siteelm.Html exposing (body, dynamic, head, html, link, meta, title)
+module Siteelm.Html exposing (body, dynamic, head, html, link, meta, script, title)
 
-import Html exposing (Attribute, Html, node)
+import Html exposing (Attribute, Html, node, text)
+import Html.Attributes exposing (attribute)
 import Siteelm.Html.Attributes exposing (data)
 
 
@@ -12,6 +13,11 @@ meta attrs =
 link : List (Attribute msg) -> Html msg
 link attrs =
     node "link" attrs []
+
+
+script : String -> String -> Html msg
+script src code =
+    node "siteelm-custom" [ data "tag" "script", attribute "src" src ] [ text code ]
 
 
 title : List (Attribute msg) -> String -> Html msg

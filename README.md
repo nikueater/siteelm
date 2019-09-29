@@ -16,11 +16,16 @@ It's just another static site generator for Elm, but has some features.
 ## usage
 ### install
 ```sh
-npm install -g elm
-npm install -g siteelm
+% npm install -g elm
+% npm install -g siteelm
 ```
+or if you'd like to do everything locally,
+```sh
+% npm install -D elm siteelm
+```
+in this case, type _"% npx siteelm 〜"_ instead of single "siteelm" 
 
-### init
+### initialize project
 ```sh
 % mkdir mysite
 % cd mysite
@@ -34,6 +39,7 @@ Then you'll see a scaffold in the directory.
 % cd mysite
 % siteelm server -d
 ```
+Then access "http://localhost:3000/"  
 The server supports file watching and auto reloading.
 
 ### building

@@ -59,6 +59,10 @@ viewHead preamble _ =
     , Html.title [] (preamble.title ++ " | sample site")
     , Html.link [ rel "stylesheet", href "/style.css" ]
     , Html.link [ rel "stylesheet", href "https://fonts.googleapis.com/css?family=Questrial&display=swap" ]
+    , Html.link [ rel "stylesheet", href "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/default.min.css" ]
+    , Html.script "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js" ""
+    , Html.script "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/languages/elm.min.js" ""
+    , Html.script "" "hljs.initHighlightingOnLoad();"
     ]
 
 

@@ -161,3 +161,7 @@ ul.products li > div:nth-child(2) {
 .counter > *:last-child {
     border-radius: 0 80px 80px 0;
 }
+
+code {
+    font-size: 14px!important;
+}

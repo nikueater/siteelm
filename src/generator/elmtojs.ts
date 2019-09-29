@@ -10,11 +10,13 @@ import {Config} from '../config'
  * @returns a raw javascript code string
  */
 export const compileStaticElmWith = (config: Config): string => {
-    const tmpFile = `${tmp.fileSync().name}.js`
+    const tmpFile = tmp.fileSync({postfix: '.js'})
     const srcDir = config.build.static_elm.src_dir || ''
     const exclude = config.build.static_elm.exclude || []
-    const r = compileElmWith(config, srcDir, exclude, tmpFile)
-    return r ? fs.readFileSync(tmpFile, 'utf-8') : ''
+    const r = compileElmWith(config, srcDir, exclude, tmpFile.name)
+    const code =  r ? fs.readFileSync(tmpFile.name, 'utf-8') : ''
+    tmpFile.removeCallback()
+    return code
 }
 
 /**
@@ -49,10 +51,10 @@ const compileElmWith = (config: Config, srcDir: string, exclude: string[], outpu
     const command = (config.build.elm.command || 'elm').split(' ')
     const args = [ 
         command.slice(1),
-        "make", 
+        ["make"], 
         elmFiles,
-        config.build.elm.optimize ? "--optimize" : "",
-        `--output=${output}`
+        [config.build.elm.optimize ? "--optimize" : ""],
+        [`--output=${output}`]
         ]
         .flat()
         .filter((x: string) => x.length > 0)

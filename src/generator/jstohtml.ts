@@ -45,7 +45,8 @@ const jsToHtmlWith = (sourcePath: string, elmcode: string, appjsPath: string, wi
         const dom = new JSDOM('', {runScripts: 'outside-only'})
         dom.window.eval(elmcode)
         dom.window.eval(staticElmInitCode(p.module, flags))
-        const body = dom.window.document.body.innerHTML
+        const body = unescapeScripts(dom).window.document.body.innerHTML
+        
         // formatting
         var ds = new JSDOM(body, {runScripts: 'outside-only'})
         const head = ds.window.document.querySelector('head')
@@ -143,9 +144,6 @@ const embedDynamicComponents = (dom: JSDOM, appjs: string): JSDOM => {
     }
     script.src = appjs
     head.appendChild(script)
-    const initialize = dom.window.document.createElement('script')
-    initialize.textContent = 'window.app = {}'
-    head.appendChild(initialize)
     var treateds: string[] = []
     dom.window.document
         .querySelectorAll('div[data-elm-module]').forEach(x => {
@@ -162,5 +160,34 @@ const embedDynamicComponents = (dom: JSDOM, appjs: string): JSDOM => {
         })
     return dom
 }
+
+/**
+ * @param dom 
+ */
+const unescapeScripts = (dom: JSDOM): JSDOM => {
+    //return  html.replace(/siteelm-custom-/g, '')
+    const customs =  
+        dom.window.document.querySelectorAll('siteelm-custom[data-tag="script"]') || []
+
+    customs.forEach((x) => {
+        const parent = x.parentElement
+        if(!parent) {
+            return
+        }
+        const script = dom.window.document.createElement('script')
+        const attrs = x.attributes
+        script.textContent = x.textContent
+        for(var i = 0; i < attrs.length; i++) {
+            const attr = attrs.item(i)
+            if(attr && attr.nodeValue && !attr.nodeName.startsWith('data-')) {
+                script.setAttribute(attr.nodeName, attr.nodeValue)
+            }
+        }
+        parent.insertBefore(script, x.nextSibling)
+        parent.removeChild(x)
+    })
+    return dom
+}
+
 
 export default jsToHtmlWith
