@@ -1,7 +1,7 @@
 <img src='https://github.com/nikueater/siteelm/raw/master/res/img/siteelm.svg?sanitize=true' width='420' alt='siteelm'>
 
 
-VERSION: v0.1.5 
+VERSION: v0.1.5  
 NODE_VERSION: v12.2.0
 
 demo: https://siteelm.netlify.com/ ([source](/res/scaffold/basic))
