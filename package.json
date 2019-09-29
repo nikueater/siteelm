@@ -5,6 +5,14 @@
   "bin": {
     "siteelm": "main.js"
   },
+  "files": [
+    "README.md",
+    "LICENSE",
+    "main.js",
+    "package.json",
+    "lib",
+    "res"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nikueater/siteelm.git"
