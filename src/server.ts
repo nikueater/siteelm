@@ -2,6 +2,7 @@ import express from 'express'
 import expressWs from 'express-ws'
 import watch from 'watch'
 import {Config} from './config'
+import fs from 'fs'
 import generateAll from './generator'
 
 const server = (config: Config) => {
@@ -17,14 +18,21 @@ const server = (config: Config) => {
     // start a server
     app.listen(app.get('port'), () => {
         console.log(`running server localhost:${app.get('port')}`)
+        //
+        var elmdirs : string[] = []
+        if(fs.existsSync('./elm.json')) {
+            const json = JSON.parse(fs.readFileSync('./elm.json', 'utf-8')) as any
+            elmdirs = (json['source-directories'] || []) as (string[])
+        }
         // watch directories
         const dirs = [ 
-            config.build.contents.src_dir || '',
-            config.build.static_elm.src_dir || '',
-            config.build.dynamic_elm.src_dir || '',
-            config.build.assets.src_dir
-        ]
+            elmdirs ? '' : (config.build.static_elm.src_dir || ''),
+            elmdirs ? '' : (config.build.dynamic_elm.src_dir || ''),
+            config.build.contents.src_dir,
+            config.build.assets.src_dir,
+        ].concat(elmdirs).filter(x => x !== '')
         // start watching
+        console.log(`WATCH: ${dirs.join(",")}`)
         const wss = ews.getWss()
         dirs.forEach(x => {
             var initial = true
