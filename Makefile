@@ -1,6 +1,11 @@
-all: deploy
 
-deploy:
+all: library
+
+
+library: 
+	npm run build
+
+demo:
 	npm install -g elm siteelm
 	npm install
 	npm run build

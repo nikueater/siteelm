@@ -11,6 +11,7 @@ import {compileStaticElmWith, compileDynamicElmWith} from './generator/elmtojs'
  * @param isServer
  */ 
 const generateAll = (config: Config, option?: {isServer?: boolean}) => {
+    console.log(`START: ${(new Date).toISOString()}`)
     // 1. generate static pages
     const elm = compileStaticElmWith(config)
     const appjs = compileDynamicElmWith(config)
@@ -46,13 +47,17 @@ const savePathFor = (file: string, config: Config): string => {
  * @param autoReloader enable auto reloading
  */ 
 const convertAndSave = (file: string, config: Config, elmcode: string, appjs: string, autoReloader: boolean): void => {
-    console.log(`Building: ${file}`)
+    console.log('--------------------------------')
+    console.log(`BEGIN: ${file}`)
+    const savePath = savePathFor(file, config)
     const draft = config.build.contents.draft || false
     const html = jsToHtmlWith(file, elmcode, appjs, draft, autoReloader)
     if(html !== '') {
-        const savePath = savePathFor(file, config)
+        console.log(`SAVE AS: ${savePath}`)
         fs.ensureFileSync(savePath)
         fs.writeFileSync(savePath, html)
+    } else {
+        console.log('ERROR: Failed to convert!')
     }
 }
 

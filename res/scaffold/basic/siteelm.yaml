@@ -8,9 +8,9 @@ build:
     assets:
         src_dir: ./src/assets
     static_elm:  
-        src_dir: ./src/elm/Static
+        src_dir: ./src/Static
         exclude:
             - ./**/View.txt
     dynamic_elm:
-        src_dir: ./src/elm/Dynamic
+        src_dir: ./src/Dynamic
 

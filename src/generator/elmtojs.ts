@@ -47,6 +47,8 @@ const compileElmWith = (config: Config, srcDir: string, exclude: string[], outpu
         return true
     }
 
+    console.log(`Elm: ${srcDir} (${elmFiles.join(', ')})`)
+
     // considering "elm" and "npx elm"
     const command = (config.build.elm.command || 'elm').split(' ')
     const args = [ 

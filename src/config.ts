@@ -47,7 +47,7 @@ const readConfigFrom = (file: string, option?: {optimize: boolean, withDraft: bo
     if(typeof conf.build.elm.optimize !== 'boolean') {
         conf.build.elm.optimize = opt.optimize
     }
-    if(typeof conf.build.distDir !== 'string') {
+    if(typeof conf.build.dist_dir !== 'string') {
         conf.build.dist_dir = './dist'
     }
     if(typeof conf.build.assets.src_dir !== 'string') {
