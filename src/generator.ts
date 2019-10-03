@@ -10,7 +10,7 @@ import {compileStaticElmWith, compileDynamicElmWith} from './generator/elmtojs'
  * @param config
  * @param isServer
  */ 
-const generateAll = async (config: Config, option?: {isServer?: boolean}) => {
+const generateAll = async (config: Config, option?: {isServer?: boolean}): Promise<boolean> => {
     console.log(`START: ${(new Date).toISOString()}`)
     // 1. generate static pages
     const elm = await compileStaticElmWith(config)
@@ -18,9 +18,25 @@ const generateAll = async (config: Config, option?: {isServer?: boolean}) => {
     const contentFiles = 
         glob.sync(`${config.build.contents.src_dir}/**/*`, {ignore: config.build.contents.exclude || [], nodir: true})
     const autoReload = (option || {}).isServer || false
-    contentFiles.forEach(x => convertAndSave(x, config, elm, appjs, autoReload))
+    var result: {ok: string[], ng: string[]} = {ok: [], ng: []}
+    contentFiles.forEach(x => {
+        const r = convertAndSave(x, config, elm, appjs, autoReload)
+        if (r) {
+            result.ok.push(x)
+        } else {
+            result.ng.push(x)
+        }
+    })
     // 2. copy static assets
     fs.copySync(config.build.assets.src_dir, config.build.dist_dir)
+
+    // 3. show result
+    console.log('RESULT:')
+    console.log(`  OK: ${result.ok.length}`)
+    result.ng.forEach((x, i) => {
+        console.log(`  NG(${i+1}): ${x}`)
+    })
+    return (result.ok.length > 0 && result.ng.length === 0)
 }
 
 /**
@@ -46,7 +62,7 @@ const savePathFor = (file: string, config: Config): string => {
  * @param appjs path for the dynamic elm code
  * @param autoReloader enable auto reloading
  */ 
-const convertAndSave = (file: string, config: Config, elmcode: string, appjs: string, autoReloader: boolean): void => {
+const convertAndSave = (file: string, config: Config, elmcode: string, appjs: string, autoReloader: boolean): boolean => {
     console.log('--------------------------------')
     console.log(`BEGIN: ${file}`)
     const savePath = savePathFor(file, config)
@@ -56,9 +72,11 @@ const convertAndSave = (file: string, config: Config, elmcode: string, appjs: st
         console.log(`SAVE AS: ${savePath}`)
         fs.ensureFileSync(savePath)
         fs.writeFileSync(savePath, html)
+        return true
     } else {
         console.log('error: check the preamble is correct form.')
         console.log('ERROR: Failed to convert!')
+        return false
     }
 }
 

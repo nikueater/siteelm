@@ -61,6 +61,9 @@ const jsToHtmlWith = (sourcePath: string, elmcode: string, appjsPath: string, wi
         // formatting
         var ds = new JSDOM(body, {runScripts: 'outside-only'})
         const head = ds.window.document.querySelector('head')
+        if(ds.window.document.body.innerHTML === '') {
+            return ''
+        }
         if(head) {
             ds.window.document.querySelectorAll('style').forEach(x => {
                     const div = x.parentNode
@@ -74,6 +77,7 @@ const jsToHtmlWith = (sourcePath: string, elmcode: string, appjsPath: string, wi
                 ds = embedDynamicComponents(ds, appjsPath)
             }
         }
+
         // auto reloader
         if (autoReloader) {
             const s = ds.window.document.createElement('script')
