@@ -1,6 +1,6 @@
 {
   "name": "siteelm",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "a static site generator for Elm",
   "bin": {
     "siteelm": "main.js"
@@ -22,7 +22,7 @@
     "build": "npx tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": ["elm", "static site generator"],
   "author": "nikueater",
   "license": "Apache-2.0",
   "dependencies": {

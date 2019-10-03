@@ -10,11 +10,11 @@ import {compileStaticElmWith, compileDynamicElmWith} from './generator/elmtojs'
  * @param config
  * @param isServer
  */ 
-const generateAll = (config: Config, option?: {isServer?: boolean}) => {
+const generateAll = async (config: Config, option?: {isServer?: boolean}) => {
     console.log(`START: ${(new Date).toISOString()}`)
     // 1. generate static pages
-    const elm = compileStaticElmWith(config)
-    const appjs = compileDynamicElmWith(config)
+    const elm = await compileStaticElmWith(config)
+    const appjs = await compileDynamicElmWith(config)
     const contentFiles = 
         glob.sync(`${config.build.contents.src_dir}/**/*`, {ignore: config.build.contents.exclude || [], nodir: true})
     const autoReload = (option || {}).isServer || false
@@ -57,6 +57,7 @@ const convertAndSave = (file: string, config: Config, elmcode: string, appjs: st
         fs.ensureFileSync(savePath)
         fs.writeFileSync(savePath, html)
     } else {
+        console.log('error: check the preamble is correct form.')
         console.log('ERROR: Failed to convert!')
     }
 }

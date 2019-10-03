@@ -1,5 +1,5 @@
 import fs from 'fs'
-import {JSDOM} from 'jsdom'
+import {JSDOM, VirtualConsole} from 'jsdom'
 import P from 'parsimmon'
 import yaml from 'js-yaml'
 import path from 'path'
@@ -42,7 +42,18 @@ const jsToHtmlWith = (sourcePath: string, elmcode: string, appjsPath: string, wi
             return ''
         }
         // generate a DOM
-        const dom = new JSDOM('', {runScripts: 'outside-only'})
+        const vc = new VirtualConsole()
+        vc.on('info', (x: string) => {
+            console.log(`info: ${x}`)
+        })
+        vc.on('warn', (x: string) => {
+            if(x.startsWith('Compiled in DEV mode.')) { return }
+            console.log(`warn: ${x}`)
+        })
+        vc.on('error', (x: string) => {
+            console.log(`error: ${x}`)
+        })
+        const dom = new JSDOM('', {runScripts: 'outside-only', virtualConsole: vc})
         dom.window.eval(elmcode)
         dom.window.eval(staticElmInitCode(p.module, flags))
         const body = unescapeScripts(dom).window.document.body.innerHTML

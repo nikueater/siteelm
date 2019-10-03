@@ -1,11 +1,11 @@
 module Static.Basic exposing (main)
 
 import Html exposing (Html, div, h2, img, li, text, ul)
-import Html.Attributes exposing (alt, class, href, src)
+import Html.Attributes exposing (alt, class, href, name, src)
 import Json.Decode as D exposing (Decoder)
 import Markdown
 import Siteelm.Html as Html
-import Siteelm.Html.Attributes exposing (charset, rel)
+import Siteelm.Html.Attributes exposing (charset, content, rel)
 import Siteelm.Page exposing (Page, page)
 import Static.View as View
 
@@ -56,7 +56,8 @@ productDecoder =
 viewHead : Preamble -> String -> List (Html Never)
 viewHead preamble _ =
     [ Html.meta [ charset "utf-8" ]
-    , Html.title [] (preamble.title ++ " | sample site")
+    , Html.title [] (preamble.title ++ " | siteelm")
+    , Html.meta [ name "description", content "this is a simple static site generator for elm" ]
     , Html.link [ rel "stylesheet", href "/style.css" ]
     , Html.link [ rel "stylesheet", href "https://fonts.googleapis.com/css?family=Questrial&display=swap" ]
     , Html.link [ rel "stylesheet", href "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/default.min.css" ]
