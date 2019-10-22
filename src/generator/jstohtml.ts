@@ -180,7 +180,6 @@ const embedDynamicComponents = (dom: JSDOM, appjs: string): JSDOM => {
  * @param dom 
  */
 const unescapeScripts = (dom: JSDOM): JSDOM => {
-    //return  html.replace(/siteelm-custom-/g, '')
     const customs =  
         dom.window.document.querySelectorAll('siteelm-custom[data-tag="script"]') || []
 

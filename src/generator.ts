@@ -74,7 +74,7 @@ const convertAndSave = (file: string, config: Config, elmcode: string, appjs: st
         fs.writeFileSync(savePath, html)
         return true
     } else {
-        console.log('error: check the preamble is correct form.')
+        console.log('error: check if the preamble is wrong form or head and body output nothing.')
         console.log('ERROR: Failed to convert!')
         return false
     }
