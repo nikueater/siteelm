@@ -10,7 +10,7 @@ build:
     static_elm:  
         src_dir: ./src/Static
         exclude:
-            - ./**/View.txt
+            - ./**/View.elm
     dynamic_elm:
         src_dir: ./src/Dynamic
 

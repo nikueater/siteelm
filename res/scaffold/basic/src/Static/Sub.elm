@@ -42,7 +42,7 @@ viewHead preamble _ =
 viewBody : Preamble -> String -> List (Html Never)
 viewBody preamble body =
     [ View.header
-    , div []
+    , div [ class "main" ]
         [ nav []
             [ a [ href "/", class "prev" ] [ text "home" ]
             ]
