@@ -4,7 +4,7 @@ import server from './server'
 import generateAll from './generator'
 import initialize from './initializer'
 
-const version = '0.1.9'
+const version = '0.2.0'
 
 program
     .version(version, '-v, --version')

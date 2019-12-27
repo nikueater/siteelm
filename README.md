@@ -27,7 +27,7 @@ or if you'd like to do everything locally,
 ```sh
 % npm install -D elm siteelm
 ```
-in this case, type _"% npx siteelm 〜"_ instead of single "siteelm" 
+in this case, type _"% npx siteelm 〜"_ instead of _"% siteelm 〜"_ 
 
 ### initialize project
 ```sh
