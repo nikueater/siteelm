@@ -5,6 +5,21 @@ import jsToHtmlWith from './generator/jstohtml'
 import {Config} from './config'
 import {compileStaticElmWith, compileDynamicElmWith} from './generator/elmtojs'
 
+class Cache {
+    staticCode: string = ""
+    dynamicCode: string = ""
+    autoReload: boolean = false
+    option?: {isServer?: boolean}
+    constructor(staticCode: string, dynamicCode: string, autoReload: boolean, option?: {isServer?: boolean} ) {
+        this.staticCode = staticCode
+        this.dynamicCode = dynamicCode
+        this.autoReload = autoReload
+        this.option = option
+    }
+}
+var cache = new Cache("", "", false)
+
+
 /**
  * main function for generating the site
  * @param config
@@ -36,8 +51,43 @@ const generateAll = async (config: Config, option?: {isServer?: boolean}): Promi
     result.ng.forEach((x, i) => {
         console.log(`  NG(${i+1}): ${x}`)
     })
+    
+    // cache
+    cache = new Cache(elm, appjs, autoReload, option)
+
     return (result.ok.length > 0 && result.ng.length === 0)
 }
+
+/**
+ * using the cache, convert a content file to a static html and save it 
+ * @param file path of a content file
+ * @param config
+ */ 
+const convertOnlyContentFiles = (config: Config): void => {
+    if(!cache.staticCode) {
+        console.log("Build All")
+        generateAll(config, cache.option)
+    } else {
+        var result: {ok: string[], ng: string[]} = {ok: [], ng: []}
+        const contentFiles = 
+            glob.sync(`${config.build.contents.src_dir}/**/*`, {ignore: config.build.contents.exclude || [], nodir: true})
+        contentFiles.forEach(x => {
+            const r = convertAndSave(x, config, cache.staticCode, cache.dynamicCode, cache.autoReload)
+            if (r) {
+                result.ok.push(x)
+            } else {
+                result.ng.push(x)
+            }
+        })
+        // 3. show result
+        console.log('RESULT:')
+        console.log(`  OK: ${result.ok.length}`)
+        result.ng.forEach((x, i) => {
+            console.log(`  NG(${i+1}): ${x}`)
+        })
+    }
+}
+
 
 /**
  * create a path for saving
@@ -80,4 +130,4 @@ const convertAndSave = (file: string, config: Config, elmcode: string, appjs: st
     }
 }
 
-export default generateAll
+export {generateAll as default, convertOnlyContentFiles}

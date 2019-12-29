@@ -126,13 +126,18 @@ const parsePreamble = (p: string, source: string): Preamble => {
     if(typeof preamble.draft !== 'boolean') {
         preamble.draft = false
     }
+    return parseYaml(preamble, source)
+}
+
+const parseYaml = (preamble: Preamble, source: string): Preamble => {
     // walk through all element to detect special values
     traverse(preamble).forEach(function(x) {
         switch(this.key) {
             case 'external':
                 const dir = path.dirname(source)
                 const file = x || ''
-                const y = fs.readFileSync(path.normalize(path.join(dir, file)), 'utf-8')
+                const newSource = path.normalize(path.join(dir, file))
+                const y = fs.readFileSync(newSource, 'utf-8')
                 const value = yaml.safeLoad(y)
                 if(this.parent) {
                     if(Object.keys(this.parent.node).length === 1) {
@@ -141,6 +146,7 @@ const parsePreamble = (p: string, source: string): Preamble => {
                         throw new InvalidPreambleError('"external" cannot have siblings')      
                     }
                 } 
+                preamble = parseYaml(preamble, newSource)
                 break
         }
     })
