@@ -42,8 +42,6 @@ const generateAll = async (config: Config, option?: {isServer?: boolean}): Promi
             result.ng.push(x)
         }
     })
-    // 2. copy static assets
-    fs.copySync(config.build.assets.src_dir, config.build.dist_dir)
 
     // 3. show result
     console.log('RESULT:')
@@ -56,6 +54,14 @@ const generateAll = async (config: Config, option?: {isServer?: boolean}): Promi
     cache = new Cache(elm, appjs, autoReload, option)
 
     return (result.ok.length > 0 && result.ng.length === 0)
+}
+
+/**
+ * main function for generating the site
+ * @param config
+ */
+const copyAssets = (config: Config) => {
+    fs.copySync(config.build.assets.src_dir, config.build.dist_dir)
 }
 
 /**
@@ -113,13 +119,12 @@ const savePathFor = (file: string, config: Config): string => {
  * @param autoReloader enable auto reloading
  */ 
 const convertAndSave = (file: string, config: Config, elmcode: string, appjs: string, autoReloader: boolean): boolean => {
-    console.log('--------------------------------')
-    console.log(`BEGIN: ${file}`)
+    console.log(`> ${file}`)
     const savePath = savePathFor(file, config)
     const draft = config.build.contents.draft || false
     const html = jsToHtmlWith(file, elmcode, appjs, draft, autoReloader)
     if(html !== '') {
-        console.log(`SAVE AS: ${savePath}`)
+        // console.log(`< ${savePath}`)
         fs.ensureFileSync(savePath)
         fs.writeFileSync(savePath, html)
         return true
@@ -130,4 +135,4 @@ const convertAndSave = (file: string, config: Config, elmcode: string, appjs: st
     }
 }
 
-export {generateAll as default, convertOnlyContentFiles}
+export {generateAll as default, convertOnlyContentFiles, copyAssets}

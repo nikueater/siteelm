@@ -45,6 +45,7 @@ Then you'll see a scaffold in the directory.
 ```
 Then access "http://localhost:3000/"  
 The server supports file watching and auto reloading.
+If you don't need the server, use `siteelm watch` instead.
 
 ### building
 ```sh

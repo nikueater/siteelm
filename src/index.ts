@@ -1,10 +1,11 @@
 import program from 'commander'
 import readConfigFrom from './config'
 import server from './server'
-import generateAll from './generator'
+import generateAll, {copyAssets} from './generator'
 import initialize from './initializer'
+import watchAll from './watcher'
 
-const version = '0.2.1'
+const version = '0.2.2'
 
 program
     .version(version, '-v, --version')
@@ -24,6 +25,7 @@ program
         if(!result) {
             process.exitCode = 1
         }   
+        copyAssets(config)
     })
 
 // "siteelm server"
@@ -38,6 +40,20 @@ program
         }
         const config = readConfigFrom('./siteelm.yaml', option)
         server(config)
+    })
+
+// "siteelm watch"
+program
+    .option('-o, --optimize', 'use optimization')
+    .option('-d, --draft', 'not to ignore drafts')
+    .command('watch')
+    .action(() => {
+        const option = {
+            optimize: program.optimize,
+            withDraft: program.draft
+        }
+        const config = readConfigFrom('./siteelm.yaml', option)
+        watchAll(config, () => {})
     })
 
 // "siteelm init"
