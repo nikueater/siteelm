@@ -5,7 +5,7 @@ import generateAll, {copyAssets} from './generator'
 import initialize from './initializer'
 import watchAll from './watcher'
 
-const version = '0.2.2'
+const version = '0.2.3'
 
 program
     .version(version, '-v, --version')
@@ -47,12 +47,16 @@ program
     .option('-o, --optimize', 'use optimization')
     .option('-d, --draft', 'not to ignore drafts')
     .command('watch')
-    .action(() => {
+    .action(async () => {
         const option = {
             optimize: program.optimize,
             withDraft: program.draft
         }
         const config = readConfigFrom('./siteelm.yaml', option)
+        const result = await generateAll(config)
+        if(!result) {
+            process.exitCode = 1
+        }
         watchAll(config, () => {})
     })
 

@@ -1,7 +1,7 @@
 import path from 'path'
-import watch from 'watch'
+import watch, {FileOrFiles} from 'watch'
 import {Config} from './config'
-import fs from 'fs'
+import fs, {Stats} from 'fs'
 import generateAll, {convertOnlyContentFiles, copyAssets} from './generator'
 
 const watchAll = (config: Config, onChange: () => void) => {
@@ -16,28 +16,24 @@ const watchAll = (config: Config, onChange: () => void) => {
         elmdirs ? '' : (config.build.dynamic_elm.src_dir || ''),
     ].concat(elmdirs).filter(x => x !== '')
 
-    console.log(`WATCH: ${dirs.join(",")}`)
 
-    var filter = (p: string) => 
-        path.extname(p) === '.elm'
 
     // start watching
     dirs.forEach(x => {
-        var initial = true
-        watch.watchTree(x, {interval: 1.5, filter: filter} , () => {
-            if(!initial) {
+        console.log(`WATCH: ${x}`)
+        watch.watchTree(x, {interval: 1.5} , (files: FileOrFiles) => {
+            if(typeof files === "string" && path.extname(files) === '.elm') {
                 generateAll(config, {isServer: true})
                 if(onChange) {
                     onChange()
                 }
-            } else {
-                initial = false
             }
         })
     })
 
     // watch assets
     watch.watchTree(config.build.assets.src_dir, () => {
+        console.log("ASSETS CHANGED")
         copyAssets(config)
     })
 
