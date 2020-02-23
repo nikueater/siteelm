@@ -5,6 +5,9 @@
   "bin": {
     "siteelm": "main.js"
   },
+  "engines": {
+    "node": ">=12.2"
+  },
   "files": [
     "README.md",
     "LICENSE",

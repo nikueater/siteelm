@@ -9,11 +9,12 @@ const version = '0.2.3'
 
 program
     .version(version, '-v, --version')
+    .option('-o, --optimize', 'use optimization')
+    .option('-d, --draft', 'not to ignore drafts')
+
 
 // "siteelm make"
 program
-    .option('-o, --optimize', 'use optimization')
-    .option('-d, --draft', 'not to ignore drafts')
     .command('make')
     .action(async () => {
         const option = {
@@ -30,8 +31,6 @@ program
 
 // "siteelm server"
 program
-    .option('-o, --optimize', 'use optimization')
-    .option('-d, --draft', 'not to ignore drafts')
     .command('server')
     .action(() => {
         const option = {
@@ -44,8 +43,6 @@ program
 
 // "siteelm watch"
 program
-    .option('-o, --optimize', 'use optimization')
-    .option('-d, --draft', 'not to ignore drafts')
     .command('watch')
     .action(async () => {
         const option = {
