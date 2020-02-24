@@ -119,7 +119,7 @@ viewBody preamble body =
                 ]
             ]
         , div []
-            [ h2 [] [ text "get preambles in an directory" ]
+            [ h2 [] [ text "get preambles in a directory" ]
             , div [ class "inner" ]
                 [ div []
                     [ text "Use \"preamblesIn\" parameter to get preambles of files in a specified directory."
