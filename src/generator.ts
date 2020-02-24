@@ -122,7 +122,7 @@ const convertAndSave = (file: string, config: Config, elmcode: string, appjs: st
     console.log(`> ${file}`)
     const savePath = savePathFor(file, config)
     const draft = config.build.contents.draft || false
-    const html = jsToHtmlWith(file, elmcode, appjs, draft, autoReloader)
+    const html = jsToHtmlWith(file, elmcode, appjs, draft, autoReloader, config.build.contents.exclude || [])
     if(html !== '') {
         // console.log(`< ${savePath}`)
         fs.ensureFileSync(savePath)

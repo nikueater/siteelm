@@ -11,3 +11,5 @@ demo:
 	npm run build
 	cd res/scaffold/basic; siteelm make -o
 
+demo-basic:
+	cd res/scaffold/basic; siteelm server

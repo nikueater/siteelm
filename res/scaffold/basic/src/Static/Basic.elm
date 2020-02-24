@@ -1,6 +1,6 @@
 module Static.Basic exposing (main)
 
-import Html exposing (Html, div, h2, img, li, text, ul)
+import Html exposing (Html, a, div, h2, img, li, text, ul)
 import Html.Attributes exposing (alt, class, href, name, src)
 import Json.Decode as D exposing (Decoder)
 import Markdown
@@ -25,6 +25,7 @@ type alias Preamble =
     { title : String
     , products : List Product
     , recommends : List Product
+    , articles : List Article
     }
 
 
@@ -34,14 +35,22 @@ type alias Product =
     }
 
 
+type alias Article =
+    { url : String
+    , title : String
+    , date : String
+    }
+
+
 {-| Preamble is passed as a JSON string. So it requires a decoder.
 -}
 preambleDecoder : Decoder Preamble
 preambleDecoder =
-    D.map3 Preamble
+    D.map4 Preamble
         (D.field "title" D.string)
         (D.field "products" (D.list productDecoder))
         (D.field "recommends" (D.list productDecoder))
+        (D.field "articles" (D.list articleDecoder))
 
 
 productDecoder : Decoder Product
@@ -49,6 +58,14 @@ productDecoder =
     D.map2 Product
         (D.field "name" D.string)
         (D.field "price" D.int)
+
+
+articleDecoder : Decoder Article
+articleDecoder =
+    D.map3 Article
+        (D.field "url" D.string)
+        (D.field "title" D.string)
+        (D.field "date" D.string)
 
 
 {-| Make contents inside the _head_ tag.
@@ -101,8 +118,33 @@ viewBody preamble body =
                 , viewProducts preamble.recommends
                 ]
             ]
+        , div []
+            [ h2 [] [ text "get preambles in an directory" ]
+            , div [ class "inner" ]
+                [ div []
+                    [ text "Use \"preamblesIn\" parameter to get preambles of files in a specified directory."
+                    ]
+                , div []
+                    [ text "Be aware that there are some parameters which Siteelm automatically sets in an preamble. At the moment, a property \"url\" is that."
+                    ]
+                , ul []
+                    (List.map
+                        viewArticle
+                        preamble.articles
+                    )
+                ]
+            ]
         ]
     ]
+
+
+viewArticle : Article -> Html Never
+viewArticle article =
+    li []
+        [ a [ href article.url ]
+            [ text article.title
+            ]
+        ]
 
 
 viewProducts : List Product -> Html Never

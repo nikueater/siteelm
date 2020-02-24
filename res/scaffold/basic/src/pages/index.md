@@ -8,6 +8,8 @@ products:
       price: 150
 recommends: 
     external: ./other.yaml
+articles:
+    preamblesIn: ./articles
 ---
 ### Markdown
 - [sub page (A)](/sub/a)
