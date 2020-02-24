@@ -38,7 +38,6 @@ const jsToHtmlWith = (sourcePath: string, elmcode: string, appjsPath: string, wi
         // create flags
         const document = parseDocument(fs.readFileSync(sourcePath, 'utf-8'))
         const p = parsePreamble(document[0], sourcePath, sourcePath, excludes)
-        console.log(JSON.stringify(p))
         const flags = {
             preamble: JSON.stringify(p),
             body: document[1]
@@ -149,7 +148,6 @@ const parsePreamble = (p: string, source: string, root: string, excludes: string
         url = ''
     }
     preamble.url = `/${url}`
-    console.log(preamble.url)
     return parseYaml(preamble, source, root, excludes, processed)
 }
 
@@ -182,7 +180,6 @@ const parseYaml = (preamble: Preamble, source: string, root: string, excludes: s
                     .map(x => path.normalize(x))
                     .filter(x => !processed.includes(x))
                     .forEach(x => {
-                        console.log(`### ${x} : ${processed}`)
                         const document = parseDocument(fs.readFileSync(x, 'utf-8'))
                         ps.push(parsePreamble(document[0], x, root, excludes))
                     })
