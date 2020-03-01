@@ -70,10 +70,10 @@ const jsToHtmlWith = (sourcePath: string, elmcode: string, appjsPath: string, wi
         }
         if(head) {
             ds.window.document.querySelectorAll('style').forEach(x => {
-                    const div = x.parentNode
-                    if(div && div.parentNode) {
+                    const styleParent = x.parentNode
+                    if(styleParent?.parentNode && styleParent.nodeName != "HEAD") {
                         head.appendChild(x)
-                        div.parentNode.removeChild(div)
+                        styleParent.parentNode.removeChild(styleParent)
                     }
                 })
             // add dynamic elm elements
