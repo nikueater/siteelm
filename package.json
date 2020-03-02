@@ -1,6 +1,6 @@
 {
   "name": "siteelm",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "a static site generator for Elm",
   "bin": {
     "siteelm": "main.js"

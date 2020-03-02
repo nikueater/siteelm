@@ -71,8 +71,8 @@ const jsToHtmlWith = (sourcePath: string, elmcode: string, appjsPath: string, wi
         if(head) {
             ds.window.document.querySelectorAll('style').forEach(x => {
                     const styleParent = x.parentNode
-                    if(styleParent?.parentNode && styleParent.nodeName != "HEAD") {
-                        head.appendChild(x)
+                    head.appendChild(x)
+                    if(styleParent?.parentNode && !styleParent.hasChildNodes()) {
                         styleParent.parentNode.removeChild(styleParent)
                     }
                 })
