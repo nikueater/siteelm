@@ -205,17 +205,25 @@ const embedDynamicComponents = (dom: JSDOM, appjs: string): JSDOM => {
     script.src = appjs
     head.appendChild(script)
     var treateds: string[] = []
-    dom.window.document
-        .querySelectorAll('div[data-elm-module]').forEach(x => {
+    Array.from(dom.window.document.querySelectorAll('div[data-elm-module]'))
+        .map(target => {
+            const flags = target.getAttribute('data-flags') || '{}'
+            const uniqueKey = Buffer.from(flags).toString('base64')
+            target.setAttribute('data-unique-key', uniqueKey)
+            return target
+        })
+        .forEach(x => {
             const modName = x.getAttribute('data-elm-module') || ''
-            if(treateds.includes(modName)) {
+            const flags = x.getAttribute('data-flags') || '{}'
+            const uniqueKey = x.getAttribute('data-unique-key') || ''
+            const treatedKey = [modName, uniqueKey].join('-')
+            if(treateds.includes(treatedKey)) {
                 return
             } else {
-                treateds.push(modName)
+                treateds.push(treatedKey)
             }
-            const flags = x.getAttribute('data-flags') || '{}'
             const script = dom.window.document.createElement('script')
-            script.textContent = dynamicElmInitCode(modName, flags)
+            script.textContent = dynamicElmInitCode(modName, flags, uniqueKey)
             dom.window.document.body.appendChild(script)
         })
     return dom
