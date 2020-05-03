@@ -9,10 +9,10 @@ import Html.Attributes exposing (class)
 import Iso8601
 import Json.Decode as Decode exposing (Decoder, int, list, string)
 import Json.Decode.Pipeline exposing (optional, required)
+import Lib.View exposing (head, headerImage, pageLayout)
 import Markdown
 import Siteelm.Html as Html
 import Siteelm.Page exposing (Page, page)
-import Static.Lib.View exposing (head, headerImage, pageLayout)
 import Time exposing (Posix)
 
 

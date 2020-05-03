@@ -5,9 +5,9 @@ import Html exposing (Html)
 import Html.Attributes exposing (class)
 import Json.Decode as Decode exposing (Decoder, string)
 import Json.Decode.Pipeline exposing (required)
+import Lib.View exposing (head, headerImage, pageLayout)
 import Markdown
 import Siteelm.Page exposing (Page, page)
-import Static.Lib.View exposing (head, headerImage, pageLayout)
 
 
 main : Page Preamble
