@@ -1,16 +1,15 @@
 module Static.Article exposing (main)
 
 import Element exposing (..)
-import Element.Background as Bg
 import Element.Font as Font
 import Html exposing (Html)
 import Html.Attributes exposing (class)
 import Iso8601
 import Json.Decode as Decode exposing (Decoder, string)
 import Json.Decode.Pipeline exposing (required)
-import Lib.View exposing (head, pageLayout)
 import Markdown
 import Siteelm.Page exposing (Page, page)
+import Static.Lib.View exposing (head, pageLayout)
 import Time exposing (Posix)
 
 
