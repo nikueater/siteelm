@@ -1,4 +1,4 @@
-module Lib.View exposing (head, headerImage, pageLayout)
+module Static.View exposing (head, headerImage, pageLayout)
 
 import Element exposing (..)
 import Element.Background as Bg
@@ -25,8 +25,8 @@ head preamble _ =
     , Html.title [] (preamble.title ++ " | siteelm blog")
     , Html.meta [ name "description", content "siteelm blog template" ]
     , Html.meta [ name "viewport", content "width=device-width,initial-scale=1" ]
-    , Html.link [ rel "stylesheet", href "markdown.css" ]
-    , Html.link [ rel "stylesheet", href "counter.css" ]
+    , Html.link [ rel "stylesheet", href "/markdown.css" ]
+    , Html.link [ rel "stylesheet", href "/counter.css" ]
     , Html.link [ rel "stylesheet", href "https://fonts.googleapis.com/css?family=Questrial&display=swap" ]
     , Html.link [ rel "stylesheet", href "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/default.min.css" ]
     , Html.script "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js" ""

@@ -13,7 +13,6 @@
             "elm/json": "1.1.3",
             "elm/time": "1.0.0",
             "elm-explorations/markdown": "1.0.0",
-            "mdgriffith/elm-animator": "1.0.1",
             "mdgriffith/elm-ui": "1.1.5",
             "rtfeldman/elm-iso8601-date-strings": "1.1.3"
         },

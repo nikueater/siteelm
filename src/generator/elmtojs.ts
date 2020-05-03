@@ -25,7 +25,7 @@ export const compileStaticElmWith = async (config: Config): Promise<string> => {
  * @returns output file path (absolute in the site)
  */
 export const compileDynamicElmWith = async (config: Config): Promise<string> => {
-    const fName = 'app.js'
+    const fName = 'dynamic.js'
     const outFile = path.join(config.build.dist_dir, fName)
     const srcDir = config.build.dynamic_elm.src_dir || ''
     const exclude = config.build.dynamic_elm.exclude || []
