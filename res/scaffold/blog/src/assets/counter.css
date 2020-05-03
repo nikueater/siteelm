@@ -1,0 +1,42 @@
+.counter * {
+    box-sizing: border-box;
+}
+
+.counter {
+    width: 320px;
+    height: 96px;
+    display: flex;
+    align-items: stretch;
+}
+
+.counter > * {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 20px;
+    color: #ffffff;
+}
+
+.counter > div {
+    background-color: #58637a;
+    font-family: Questrial, sans-serif;
+}
+
+.counter > button {
+    border: none;
+    background-color: #3db7Cf;
+    font-family: Questrial, sans-serif;
+    padding: 0;
+}
+
+.counter > *:first-child {
+    border-radius: 80px 0 0 80px;
+}
+
+.counter > *:last-child {
+    border-radius: 0 80px 80px 0;
+}
+
+

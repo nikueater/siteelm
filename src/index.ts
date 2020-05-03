@@ -5,7 +5,7 @@ import generateAll, {copyAssets} from './generator'
 import initialize from './initializer'
 import watchAll from './watcher'
 
-const version = '0.2.12'
+const version = '0.3.0'
 
 program
     .version(version, '-v, --version')
@@ -60,8 +60,8 @@ program
 // "siteelm init"
 program
     .command('init')
-    .action(() => {
-        initialize()
+    .action(async () => {
+        await initialize()
     })
 
 program.parse(process.argv)

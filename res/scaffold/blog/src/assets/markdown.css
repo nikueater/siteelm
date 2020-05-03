@@ -1,0 +1,18 @@
+.md {
+    margin: 0;
+    padding: 1rem 0;
+}
+
+.md * {
+    margin: 0;
+}
+
+.md h1 {
+    padding: 0;
+    font-size: 2rem;
+}
+
+.md p {
+    padding: 0.5rem 0;
+}
+

@@ -1,14 +1,15 @@
 import path from 'path'
 import fs from 'fs-extra'
 import glob from 'glob'
+import prompts from 'prompts'
 
 const scaffoldDir = path.join(__dirname, '../res/scaffold')
-const scaffoldName = 'basic'
+let scaffoldName = 'basic'
 
 /**
  * just copy a scaffold
  */
-const initialize = () => {
+const initialize = async () => {
     const whitelist = [
         './package.json',
         './package-lock.json',
@@ -22,6 +23,28 @@ const initialize = () => {
         console.error('(if you need, you can put only "package.json", "package-lock.json", and "node_modules")')
         return
     } 
+
+    console.log(`choose the template`)
+    console.log(`[0] basic (default)`)
+    console.log(`[1] blog`)
+    let template = -1
+    while(![0, 1].includes(template)) {
+        const res = await prompts({
+            'type': 'number',
+            'name': 'template',
+            'message': 'template:'
+        })
+        template = res.template ?? 0
+    }
+    switch(template) {
+        case 0:
+            scaffoldName = 'basic'
+            break
+        case 1:
+            scaffoldName = 'blog'
+            break
+    }
+
     console.log(`copying the scaffold "${scaffoldName}..."`)
     const scaffold = path.join(scaffoldDir, scaffoldName)
     fs.copySync(scaffold, '.')

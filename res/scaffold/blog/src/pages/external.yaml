@@ -1,0 +1,6 @@
+- name: Unagi
+  price: 2000
+- name: Hamo
+  price: 1000
+- name: Hamachi
+  price: 500
