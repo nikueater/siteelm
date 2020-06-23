@@ -5,7 +5,7 @@ import generateAll, {copyAssets} from './generator'
 import initialize from './initializer'
 import watchAll from './watcher'
 
-const version = '0.3.0'
+const version = '0.3.2'
 
 program
     .version(version, '-v, --version')
