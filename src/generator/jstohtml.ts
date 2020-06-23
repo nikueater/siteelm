@@ -33,11 +33,11 @@ class InvalidPreambleError extends ConvertError { name = 'Preamble' }
  * @param excludes which are excluded by indexing
  * @returns void
  */
-const jsToHtmlWith = (sourcePath: string, elmcode: string, appjsPath: string, withDraft: boolean, autoReloader: boolean, excludes: string[]): string => {
+const jsToHtmlWith = (sourcePath: string, srcDir: string, elmcode: string, appjsPath: string, withDraft: boolean, autoReloader: boolean, excludes: string[]): string => {
     try {
         // create flags
         const document = parseDocument(fs.readFileSync(sourcePath, 'utf-8'))
-        const p = parsePreamble(document[0], sourcePath, sourcePath, excludes)
+        const p = parsePreamble(document[0], sourcePath, `${srcDir}/*`, excludes)
         const flags = {
             preamble: JSON.stringify(p),
             body: document[1]
